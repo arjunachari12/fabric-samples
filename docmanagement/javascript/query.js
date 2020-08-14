@@ -7,14 +7,15 @@
 'use strict';
 
 const { Gateway, Wallets } = require('fabric-network');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
-async function main() {
+
+async function executeFunc(fucname, carnumber) {
     try {
         // load the network configuration
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
-        let ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+        const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
 
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
@@ -38,22 +39,46 @@ async function main() {
 
         // Get the contract from the network.
         const contract = network.getContract('fabcar');
+        //let result;
+       // Evaluate the specified transaction.
+        //queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
+        //queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
+        // result = await contract.evaluateTransaction('queryCar', 'CAR1');
+        const result = await contract.evaluateTransaction('queryAllDocument');
+        // const result = await contract.evaluateTransaction('getCarHistory', 'CAR0');
+        // if (carnumber != '') {
+        //      result = await contract.evaluateTransaction(fucname, carnumber);
+        // }
+        // else {
+        //      result = await contract.evaluateTransaction(fucname);
+        // }
 
-        // Submit the specified transaction.
-        // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
-        // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR12', 'Dave')
-       // await contract.submitTransaction('changeCarOwner', 'CAR9', 'Dave');
-        //await contract.submitTransaction('deleteCar', 'CAR9');
-        //await contract.submitTransaction('createCar', 'CAR10', 'Maruti', '800', 'White', 'Arjun');
-        console.log('Transaction has been submitted');
+        console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
         // Disconnect from the gateway.
         await gateway.disconnect();
-
+        console.log(result);
+        return result;
+        
     } catch (error) {
-        console.error(`Failed to submit transaction: ${error}`);
+        console.error(`Failed to evaluate transaction: ${error}`);
         process.exit(1);
     }
 }
 
-main();
+//main();
+
+var queryChaincode = async function(fucname, carNumber) {
+    try {
+        // load the network configuration
+        return executeFunc(fucname, carNumber);
+
+        
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        process.exit(1);
+    }
+
+}
+exports.queryChaincode = queryChaincode;
+

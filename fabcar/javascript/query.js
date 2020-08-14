@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 
-async function main() {
+async function executeFunc(fucname, carnumber) {
     try {
         // load the network configuration
         const ccpPath = path.resolve(__dirname, '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
@@ -38,16 +38,27 @@ async function main() {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('fabcar');
+        const contract = network.getContract('docmanagement');
+        let result;
+       // Evaluate the specified transaction.
+        //queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
+        //queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
+        // result = await contract.evaluateTransaction('queryCar', 'CAR1');
+        // const result = await contract.evaluateTransaction('queryAllCars');
+        // const result = await contract.evaluateTransaction('getCarHistory', 'CAR0');
+        if (carnumber != '') {
+             result = await contract.evaluateTransaction(fucname, carnumber);
+        }
+        else {
+             result = await contract.evaluateTransaction(fucname);
+        }
 
-        // Evaluate the specified transaction.
-        // queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
-        // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-        const result = await contract.evaluateTransaction('queryCar', 'CAR10');
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
         // Disconnect from the gateway.
         await gateway.disconnect();
+        console.log(result);
+        return result;
         
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
@@ -55,4 +66,19 @@ async function main() {
     }
 }
 
-main();
+//main();
+
+var queryChaincode = async function(fucname, carNumber) {
+    try {
+        // load the network configuration
+        return executeFunc(fucname, carNumber);
+
+        
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        process.exit(1);
+    }
+
+}
+exports.queryChaincode = queryChaincode;
+

@@ -1,4 +1,1 @@
-GET http://localhost:3000/cars
-
-###
-GET http://localhost:3000/cars/CAR2
+GET http://localhost:3000

@@ -122,7 +122,7 @@ class FabCar extends Contract {
             model,
             owner,
             state: 'New',
-            price
+            price,
         };
 
         await ctx.stub.putState(carNumber, Buffer.from(JSON.stringify(car)));
