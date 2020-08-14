@@ -38,7 +38,7 @@ async function executeFunc(fucname, carnumber) {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('docmanagement');
+        const contract = network.getContract('fabcar');
         let result;
        // Evaluate the specified transaction.
         //queryCar transaction - requires 1 argument, ex: ('queryCar', 'CAR4')
